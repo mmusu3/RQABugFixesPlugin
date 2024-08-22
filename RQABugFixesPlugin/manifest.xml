@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<PluginManifest xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Name>RQA Bug Fixes</Name>
+  <Guid>7144DF6D-1B90-4574-AB40-0C15006CD05F</Guid>
+  <Repository>None</Repository>
+  <Version>v1.0.0.0</Version>
+</PluginManifest>
