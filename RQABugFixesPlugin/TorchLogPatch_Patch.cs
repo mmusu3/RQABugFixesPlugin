@@ -5,14 +5,14 @@ using VRage.Utils;
 
 namespace RQABugFixes;
 
-// Fix Torch exception
+// Fix Torch exception during startup
 [PatchShim]
-static class KeenLogPatch_PrepareLog_Patch
+static class TorchLogPatch_Patch
 {
     public static void Patch(PatchContext ctx)
     {
         var source = Type.GetType("Torch.Patches.KeenLogPatch, Torch")!.GetMethod("PrepareLog", _public: false, _static: true);
-        var target = typeof(KeenLogPatch_PrepareLog_Patch).GetMethod(nameof(Prefix), _public: false, _static: true);
+        var target = typeof(TorchLogPatch_Patch).GetMethod(nameof(Prefix), _public: false, _static: true);
 
         ctx.GetPattern(source).Prefixes.Add(target);
     }
