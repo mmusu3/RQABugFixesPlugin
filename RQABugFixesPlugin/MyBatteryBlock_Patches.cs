@@ -18,8 +18,8 @@ static class MyBatteryBlock_Patches
         MethodInfo source;
         MethodInfo transpiler;
 
-        source = typeof(MyBatteryBlock).GetMethod(nameof(MyBatteryBlock.UpdateAfterSimulation100), _public: true, _static: false);
-        transpiler = typeof(MyBatteryBlock_Patches).GetMethod(nameof(Transpile_UpdateAfterSimulation100), _public: false, _static: true);
+        source = typeof(MyBatteryBlock).GetMethod("UpdateInternal", _public: false, _static: false);
+        transpiler = typeof(MyBatteryBlock_Patches).GetMethod(nameof(Transpile_UpdateInternal), _public: false, _static: true);
         ctx.GetPattern(source).Transpilers.Add(transpiler);
     }
 
@@ -30,14 +30,12 @@ static class MyBatteryBlock_Patches
     //
     // -- Replace the code that looks like this: --
     //
-    //public override void UpdateAfterSimulation100()
+    //private void UpdateInternal(bool forceUpdate = false)
     //{
-    //    base.UpdateAfterSimulation100();
-    //
     //    float num = (float)m_lastUpdateTime;
     //    m_lastUpdateTime = MySession.Static.GameplayFrameCounter;
     //
-    //    if (!base.IsFunctional)
+    //    if (!base.IsFunctional || (!Enabled && !forceUpdate))
     //        return;
     //
     //    UpdateMaxOutputAndEmissivity();
@@ -48,15 +46,13 @@ static class MyBatteryBlock_Patches
     //
     // -- With this: --
     //
-    //public override void UpdateAfterSimulation100()
+    //private void UpdateInternal(bool forceUpdate = false)
     //{
-    //    base.UpdateAfterSimulation100();
-    //
     //    float num;
     //
     //    DeltaTimeHelper(ref m_lastUpdateTime, out num);
     //
-    //    if (!base.IsFunctional)
+    //    if (!base.IsFunctional || (!Enabled && !forceUpdate))
     //        return;
     //
     //    UpdateMaxOutputAndEmissivity();
@@ -65,9 +61,9 @@ static class MyBatteryBlock_Patches
     //
     //    .....
     //
-    static IEnumerable<MsilInstruction> Transpile_UpdateAfterSimulation100(IEnumerable<MsilInstruction> instructionStream)
+    static IEnumerable<MsilInstruction> Transpile_UpdateInternal(IEnumerable<MsilInstruction> instructionStream)
     {
-        Plugin.Log.Debug($"Patching {nameof(MyBatteryBlock)}.UpdateAfterSimulation100.");
+        Plugin.Log.Debug($"Patching {nameof(MyBatteryBlock)}.UpdateInternal.");
 
         const int expectedParts = 2;
         int patchedParts = 0;
@@ -127,7 +123,7 @@ static class MyBatteryBlock_Patches
         }
 
         if (patchedParts != expectedParts)
-            Plugin.Log.Fatal($"Failed to patch {nameof(MyBatteryBlock)}.UpdateAfterSimulation100. {patchedParts} out of {expectedParts} code parts matched.");
+            Plugin.Log.Fatal($"Failed to patch {nameof(MyBatteryBlock)}.UpdateInternal. {patchedParts} out of {expectedParts} code parts matched.");
         else
             Plugin.Log.Debug("Patch successful.");
     }
