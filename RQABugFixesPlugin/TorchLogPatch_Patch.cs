@@ -6,7 +6,7 @@ using VRage.Utils;
 namespace RQABugFixes;
 
 // Fix Torch exception during startup
-[PatchShim]
+//[PatchShim]
 static class TorchLogPatch_Patch
 {
     public static void Patch(PatchContext ctx)
